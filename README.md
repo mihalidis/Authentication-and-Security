@@ -7,7 +7,7 @@ The techs I use is Node.js, Express.js, ejs for view engine, MongoDb for databas
 
 ## Installation
 
-Use the package manager [npm](https://www.npmjs.com/) to instal.
+Use the package manager [npm](https://www.npmjs.com/) to install.
 
 ```bash
 npm install
