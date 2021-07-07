@@ -6,6 +6,7 @@ const ejs = require("ejs");
 const mongo = require("mongodb");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const encrypt = require("mongoose-encryption");
 
 const app = express();
 
@@ -31,6 +32,8 @@ const userSchema = new mongoose.Schema({
     password: String
 });
 
+const secret = "thisisasecretlongsecret."; // this line will be change in future, its for trying mongoose-encryption
+userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] });
 // Model for user
 const User = mongoose.model("User", userSchema);
 
@@ -53,11 +56,26 @@ app.post("/register", (req,res)=>{
     const password = req.body.password;
 
     const newUser = new User({username: username, password: password});
+
     newUser.save((err,data)=>{
         if (err) throw err;
         console.log("Your item saved to database");
-        res.json(data);
+        res.render("secrets");
     });
+});
+
+app.post("/login",(req,res)=>{
+   const username = req.body.username;
+   const password = req.body.password;
+
+   User.findOne({username: username}, (err, foundedItem)=>{
+      if (err) throw err;
+      if(foundedItem) {
+          if(foundedItem.password === password){
+              res.render("secrets")
+          }
+      }
+   });
 });
 
 

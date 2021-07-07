@@ -16,6 +16,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "mongodb": "^3.6.9",
-    "mongoose": "^5.13.2"
+    "mongoose": "^5.13.2",
+    "mongoose-encryption": "^2.1.0"
   }
 }
