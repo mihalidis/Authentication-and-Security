@@ -6,8 +6,8 @@ const ejs = require("ejs");
 const mongo = require("mongodb");
 const mongoose = require("mongoose");
 const cors = require("cors");
-// const encrypt = require("mongoose-encryption");
-const md5 = require('md5');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const app = express();
 
@@ -33,10 +33,6 @@ const userSchema = new mongoose.Schema({
     password: String
 });
 
-// using encrypt level 1 security
-//const secret = process.env.SECRET;
-// userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] });
-
 // Model for user
 const User = mongoose.model("User", userSchema);
 
@@ -57,25 +53,35 @@ app.get("/register", (req, res)=>{
 //register user
 app.post("/register", (req,res)=>{
 
-    const newUser = new User({username: req.body.username, password: md5(req.body.password)});
-
-    newUser.save((err,data)=>{
+    bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
         if (err) throw err;
-        res.render("secrets");
+
+        const newUser = new User({username: req.body.username, password: hash});
+
+        newUser.save((err,data)=>{
+            if (err) throw err;
+            res.render("secrets");
+        });
     });
+
 });
 
 //login user
 app.post("/login",(req,res)=>{
    const username = req.body.username;
-   const password = md5(req.body.password);
+   const password = req.body.password;
 
    User.findOne({username: username}, (err, foundedItem)=>{
       if (err) throw err;
       if(foundedItem) {
-          if(foundedItem.password === password){
-              res.render("secrets")
-          }
+          bcrypt.compare(password, foundedItem.password, function(err, result) {
+              if (err) throw err;
+              if(result === true) {
+                  res.render("secrets");
+              }else {
+                  alert("wrong password or username");
+              }
+          });
       }
    });
 });
