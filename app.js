@@ -5,15 +5,15 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongo = require("mongodb");
 const mongoose = require("mongoose");
-const cors = require("cors");
+/*const cors = require("cors");*/
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 
 
 const app = express();
-
-app.use(cors());
+/*
+app.use(cors());*/
 app.use('/public', express.static(process.cwd() + "public"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
@@ -23,18 +23,18 @@ app.use(bodyParser.urlencoded({
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Mongoose Connectionn
+// Mongoose Connection
 mongoose.connect(process.env.DB_MONGODB, {useNewUrlParser: true, useUnifiedTopology: true}, err => {
     if (err) throw  err;
     console.log("Connection Success");
 });
-mongoose.set("useCreateIndex", true);
+/*mongoose.set("useCreateIndex", true);*/
 
 // User Schema
 const userSchema = new mongoose.Schema({
