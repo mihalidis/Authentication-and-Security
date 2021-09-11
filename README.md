@@ -13,6 +13,10 @@ Use the package manager [npm](https://www.npmjs.com/) to install.
 npm install
 ```
 
+```bash
+use env_example file and put your db connection, port and secret <3
+```
+
 ## Usage
 
 ```
